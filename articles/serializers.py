@@ -13,6 +13,15 @@ class ArticlesSerializer(serializers.ModelSerializer):
         model = Articles
         fields = '__all__'
 
+class ArticlesCreateSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    class Meta:
+        model = Articles
+        fields = '__all__'
+        
+    def get_user(self, obj):
+        return obj.user.email
+
 
 # comments
 class CommentsSerializer(serializers.ModelSerializer):

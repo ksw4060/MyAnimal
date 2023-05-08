@@ -7,12 +7,14 @@ from django.core.exceptions import ValidationError
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+
+    def create_user(self, account, email, password=None, **extra_fields):
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have a email")
 
         user = self.model(
-            email=self.normalize_email(email),  # 소문자로 바꾼 후 정규화 체크
+            account=account,
+            email=self.normalize_email(email),
             **extra_fields
         )
 
@@ -32,6 +34,9 @@ class UserManager(BaseUserManager):
 
 
 class Users(AbstractBaseUser):
+    class Meta:
+        db_table = "User"
+
     account = models.CharField("계정", max_length=50, unique=True)
     nickname = models.CharField("별명", max_length=15, blank=True)
     email = models.EmailField(
@@ -96,6 +101,7 @@ class Users(AbstractBaseUser):
         error_messages: Optional[_ErrorMessagesToOverride] = ...,
     ) -> None: ...
     '''
+
     category = models.CharField(
         "반려동물 종류", choices=categories, max_length=10, blank=True
     )
@@ -106,7 +112,7 @@ class Users(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'account'
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["email",]
 
     class Meta:
         db_table = "User"

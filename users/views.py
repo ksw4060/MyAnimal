@@ -4,9 +4,23 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
+from django.shortcuts import render
+from users.serializers import UserSerializer, CustomTokenObtainPairSerializer
+
 
 # 로그인, 회원가입 - 김성우
-#
+class SignupView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "가입완료!"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": f"${serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 # 프로필 - 이준영
 class ProfileView(APIView):
