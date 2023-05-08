@@ -13,12 +13,14 @@ class ArticlesSerializer(serializers.ModelSerializer):
         model = Articles
         fields = '__all__'
 
+
 class ArticlesCreateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+
     class Meta:
         model = Articles
         fields = '__all__'
-        
+
     def get_user(self, obj):
         return obj.user.email
 
@@ -32,12 +34,14 @@ class CommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comments
-        fields = '__all__'  # 게시글빼고 보여주기
+        exclude = ('article',)  # 게시글 필드 빼고 보여주기
 
 
 # comments작성
-class CommentsCreatSerializer(serializers.ModelSerializer):
-    pass
+class CommentsCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ("comment",)
 
 
 #
