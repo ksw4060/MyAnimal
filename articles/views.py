@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
 
+# 게시글 좋아요 기능.
 class HeartsView(APIView):
     def post(self,request, article_id):
         article = get_object_or_404(Articles, id=article_id)
