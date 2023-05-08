@@ -67,3 +67,16 @@ class ArticlesDetailView(APIView): # /articles/id/
             return Response({"message":"삭제완료!"},status=status.HTTP_204_NO_CONTENT)
         else: # 로그인된 사용자의 글이 아니라면 
             return Response({"message":"권한이 없습니다"},status=status.HTTP_403_FORBIDDEN)
+
+
+# 게시글 좋아요 기능.
+class HeartsView(APIView):
+    def post(self,request, article_id):
+        article = get_object_or_404(Articles, id=article_id)
+        if request.user in article.hearts.all():
+            article.hearts.remove(request.user)
+            return Response('좋아요 취소', status=status.HTTP_200_OK)
+        else:
+            article.hearts.add(request.user)
+            return Response('좋아요', status=status.HTTP_200_OK)
+            
