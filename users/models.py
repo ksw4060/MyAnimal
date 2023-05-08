@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self,  email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields):
         user = self.create_user(
             email=email,
             password=password,
@@ -113,6 +113,9 @@ class Users(AbstractBaseUser):
 
     USERNAME_FIELD = 'account'
     REQUIRED_FIELDS = ["email",]
+
+    class Meta:
+        db_table = "User"
 
     def __str__(self):
         return self.email
