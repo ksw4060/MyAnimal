@@ -23,7 +23,7 @@ class CommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comments
-        exclude = ("article",)  # 게시글빼고 보여주기
+        fields = '__all__'  # 게시글빼고 보여주기
 
 
 # comments작성

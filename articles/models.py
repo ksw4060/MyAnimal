@@ -7,8 +7,7 @@ from users.models import Users
 class Articles(models.Model):
     class Meta:
         db_table = "Articles"
-        abstract = True
-        ordering = ['-created_at']  # 게시글 최신순 정렬
+        ordering = ['-article_created_at']  # 게시글 최신순 정렬
 
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     article_title = models.CharField("글제목", max_length=45)
@@ -49,16 +48,19 @@ class Articles(models.Model):
 
 # 댓글 models
 class Comments(models.Model):
+    class Meta:
+        db_table = 'comment'
+        ordering = ['-comment_created_at']  # 게시글 최신순 정렬
+
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    article = models.ForeignKey(
-        Articles, on_delete=models.CASCADE, related_name="comments")
+    article = models.ForeignKey(Articles, on_delete=models.CASCADE)
     comment = models.TextField("댓글")
     comment_created_at = models.DateTimeField(auto_now_add=True)  # 생성시각
     comment_updated_at = models.DateTimeField(
         auto_now=True, null=True, blank=True)  # 수정시각, 최초 글 작성시 디폴트를 None 으로, 수정시에 수정 시각 업데이트
 
-    def __str__(self):
-        return str(self.comment)
+    # def __str__(self):
+    #     return str(self.comment)
 
     # 댓글 갯수 세는 함수
     def count_comment(self):
