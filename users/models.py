@@ -7,18 +7,13 @@ from django.core.exceptions import ValidationError
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, account, nickname, category, email, password=None):
+    def create_user(self, email, password=None, **extra_fields):
         # if not email:
         #     raise ValueError('Users must have an email address')
         if email:
-            email = validate_email(email)
-        else:
             raise ValueError('Users must have an email address')
 
         user = self.model(
-            account=account,
-            nickname=nickname,
-            category=category,
             email=self.normalize_email(email),  # 소문자로 바꾼 후 정규화 체크
         )
 
@@ -26,11 +21,11 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, account, email, password=None):
+    def create_superuser(self,email, password=None, **extra_fields):
         user = self.create_user(
-            account,
             password,
             email,
+            **extra_fields
         )
         user.is_admin = True
         user.save(using=self._db)
