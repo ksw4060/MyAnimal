@@ -37,7 +37,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class Users(AbstractBaseUser):
     account = models.CharField("계정", max_length=50, unique=True)
     nickname = models.CharField("별명", max_length=15, blank=True)
     email = models.EmailField(

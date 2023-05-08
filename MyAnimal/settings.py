@@ -5,7 +5,7 @@ from os import path, environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-AUTH_USER_MODEL = 'users.User'  # 인증 유저 모델 설정
+AUTH_USER_MODEL = 'users.Users'  # 인증 유저 모델 설정
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -124,10 +124,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -174,10 +174,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-# STATIC_ROOT = BASE_DIR / "static"
-# STATIC_URL = "/static/"
-
-# MEDIA_ROOT = BASE_DIR / "media"
-# MEDIA_URL = "/media/"
 
 CORS_ALLOW_ALL_ORIGINS = True
