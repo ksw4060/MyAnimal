@@ -3,7 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from articles.models import Articles, Comments
-from articles.serializers import ArticlesSerializer, ArticlesCreateSerializer, CommentsSerializer, CommentsCreateSerializer
+from articles.serializers import ArticlesSerializer, CommentsSerializer, CommentsCreateSerializer
 import datetime
 
 

@@ -14,8 +14,11 @@ class ArticleImageSerializer(serializers.ModelSerializer):
         
 class ArticlesSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-    images = serializers.ListField(child=serializers.ImageField())
 
+    class Meta:
+            model = Articles
+            fields = '__all__'
+            
     def get_user(self, obj):
         return obj.user.email
     
@@ -23,17 +26,6 @@ class ArticlesSerializer(serializers.ModelSerializer):
     def get_images(self, obj):
         image = obj.image.all() 
         return ArticleImageSerializer(instance=image, many=True, context=self.context).data
-
-
-class ArticlesCreateSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Articles
-        fields = '__all__'
-
-    def get_user(self, obj):
-        return obj.user.email
 
 
 # comments
