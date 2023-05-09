@@ -115,11 +115,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+STATIC_ROOT = path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
 MEDIA_ROOT = path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -168,3 +168,6 @@ SIMPLE_JWT = {
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# 기본 프로필 이미지 경로
+DEFAULT_PROFILE_IMAGE = 'static/img/die1_1.png'
