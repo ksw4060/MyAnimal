@@ -40,5 +40,5 @@ class UserProfileSerializer(serializers.ModelSerializer):
     # like_articles = ArticlesSerializer(many=True)
 
     class Meta:
-        model = User
+        model = Users
         fields = ("id", "account", "followings", "followers",)
