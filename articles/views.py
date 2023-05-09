@@ -11,6 +11,7 @@ from articles.serializers import (
 import datetime
 from rest_framework import permissions
 
+
 # ============================ 글 목록, 작성 클래스 (id 불필요) ============================
 
 
@@ -81,21 +82,23 @@ class ArticlesDetailView(APIView): # /articles/id/
 
 # ====================== 게시글 좋아요 ================================
 class HeartsView(APIView):
-    def post(self, request, article_id):
-        articles = get_object_or_404(Articles, id=article_id)
-        if request.user in articles.hearts.all():
-            articles.hearts.remove(request.user)
+    def post(self,request, article_id):
+        article = get_object_or_404(Articles, id=article_id)
+        if request.user in article.hearts.all():
+            article.hearts.remove(request.user)
             return Response('좋아요 취소', status=status.HTTP_200_OK)
         else:
-            articles.hearts.add(request.user)
+            article.hearts.add(request.user)
             return Response('좋아요', status=status.HTTP_200_OK)
 
+        
+    
 # ====================== 좋아요 한 게시글 보기 ================================
-    def get(self, request, user_id):
-        articles = Articles.objects.all()
-        if user_id in articles.herats.all():
-            serializer = ArticlesSerializer(articles, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self,request):
+        user = request.user
+        article = user.hearts.all()
+        serializer = ArticlesSerializer(article, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # ====================== 게시글 북마크 ================================
 
@@ -111,11 +114,13 @@ class BookMarksView(APIView):
             return Response('북마크', status=status.HTTP_200_OK)
 
 # ====================== 북마크 한 게시글 보기 ================================
-    def get(self, request, user_id):
-        articles = Articles.objects.all()
-        if user_id in articles.bookmarks.all():
-            serializer = ArticlesSerializer(articles, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get(self,request):
+        user = request.user
+        article = user.bookmarks.all()
+        serializer = ArticlesSerializer(article, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 # ====================== 댓글 목록, 작성 클래스 ================================
 
