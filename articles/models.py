@@ -12,8 +12,8 @@ class Articles(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     article_title = models.CharField("글제목", max_length=45)
     article_content = models.TextField("글내용")
-    article_img = models.FileField(
-        "이미지", upload_to='', blank=True, null=True)  # 글 내 이미지 업로드
+    # article_img = models.FileField(
+    #     "이미지", upload_to='', blank=True, null=True)  # 글 내 이미지 업로드
     article_created_at = models.DateTimeField(auto_now_add=True)  # 생성시각
     article_updated_at = models.DateTimeField(
         auto_now=True, null=True, blank=True)  # 수정시각
@@ -44,6 +44,24 @@ class Articles(models.Model):
     # 북마크 갯수 세는 함수
     def count_bookmarks(self):
         return self.bookmarks.count()
+
+'''
+이미지 다중 업로드 받기
+- 게시글과 이미지를 1:N으로 설정해 테이블 생성
+'''
+# 이미지 업로드 경로 
+def image_upload_path(instance, filename):
+    return f'{instance.article.id}/{filename}'
+
+class ArticleImage(models.Model):
+    article = models.ForeignKey(Articles, on_delete=models.CASCADE, related_name='image')
+    image = models.ImageField(upload_to=image_upload_path)
+
+    def __int__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'article_image'
 
 
 # 댓글 models
