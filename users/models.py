@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.core.exceptions import ValidationError
 
+from django.conf import settings
 # https://docs.djangoproject.com/ko/4.1/topics/auth/customizing/
 # 에 있는 User, UserManager 모델 입니다.
 
@@ -15,9 +16,9 @@ class UserManager(BaseUserManager):
         user = self.model(
             account=account,
             email=self.normalize_email(email),  # 소문자로 바꾼 후 정규화 체크
+            profile_img=settings.DEFAULT_PROFILE_IMAGE,   # 기본 이미지
             **extra_fields
         )
-
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -26,6 +27,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email=email,
             password=password,
+            profile_img=settings.DEFAULT_PROFILE_IMAGE,   # 기본 이미지
             **extra_fields
         )
         user.is_admin = True
@@ -46,10 +48,12 @@ class Users(AbstractBaseUser):
     )
     profile_img = models.ImageField(
         "프로필 이미지",
-        upload_to=None,
-        height_field=None,
-        width_field=None,
-        max_length=None,
+        upload_to='users/',
+        # height_field=None,
+        # width_field=None,
+        # max_length=None,
+        default='static/img/die1_1.png',  # default 이미지
+        # default=settings.DEFAULT_PROFILE_IMAGE,  # default 이미지
         blank=True,
     )
     # default(line)
@@ -65,6 +69,7 @@ class Users(AbstractBaseUser):
     )
     followings = models.ManyToManyField(
         "self", symmetrical=False, related_name='followers')  # symmetrical=False 대칭여부
+
     category = models.CharField(
         "반려동물 종류", choices=categories, max_length=10, blank=True
     )
