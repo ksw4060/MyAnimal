@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError
 
 class UserManager(BaseUserManager):
 
-
     def create_user(self, account, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Users must have a email")
@@ -22,7 +21,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-
 
     def create_superuser(self, email, password=None, **extra_fields):
         user = self.create_user(
@@ -67,43 +65,6 @@ class Users(AbstractBaseUser):
     )
     followings = models.ManyToManyField(
         "self", symmetrical=False, related_name='followers')  # symmetrical=False 대칭여부
-
-    '''
-    self,
-        to: Union[Type[_T], str],
-        related_name: Optional[str] = ...,
-        related_query_name: Optional[str] = ...,
-        limit_choices_to: Optional[Union[Dict[str, Any], Callable[[], Any], Q]] = ...,
-        symmetrical: Optional[bool] = ...,
-        through: Optional[Union[str, Type[Model]]] = ...,
-        through_fields: Optional[Tuple[str, str]] = ...,
-        db_constraint: bool = ...,
-        db_table: Optional[str] = ...,
-        swappable: bool = ...,
-        verbose_name: Optional[Union[str, bytes]] = ...,
-        name: Optional[str] = ...,
-        primary_key: bool = ...,
-        max_length: Optional[int] = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: bool = ...,
-        db_index: bool = ...,
-        default: Any = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: Optional[str] = ...,
-        unique_for_month: Optional[str] = ...,
-        unique_for_year: Optional[str] = ...,
-        choices: Optional[_FieldChoices] = ...,
-        help_text: str = ...,
-        db_column: Optional[str] = ...,
-        db_tablespace: Optional[str] = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: Optional[_ErrorMessagesToOverride] = ...,
-    ) -> None: ...
-    '''
-
     category = models.CharField(
         "반려동물 종류", choices=categories, max_length=10, blank=True
     )
@@ -120,7 +81,7 @@ class Users(AbstractBaseUser):
         db_table = "User"
 
     def __str__(self):
-        return self.email
+        return self.account
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -137,3 +98,5 @@ class Users(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+# is_staff와 is_admin 분류 해야하고, db에 등록이 안되어 있음.
