@@ -33,3 +33,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['age'] = user.age
         token['gender'] = user.gender
         return token
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    followings = serializers.StringRelatedField(many=True)
+    followers = serializers.StringRelatedField(many=True)
+    # article_set = ArticlesSerializer(many=True)
+    # like_articles = ArticlesSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = ("id", "account", "followings", "followers",)
