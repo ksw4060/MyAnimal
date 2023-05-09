@@ -5,7 +5,7 @@ from django.urls import path
 urlpatterns = [
 
     path('',views.ArticlesView.as_view(), name = 'article'), # /articles/
-    path('<int:article_id>/',views.ArticlesView.as_view(), name = 'article'), # /articles/<int:article_id>/
+    path('<int:article_id>/',views.ArticlesDetailView.as_view(), name = 'article'), # /articles/<int:article_id>/
     
     path('<int:article_id>/hearts/',views.HeartsView.as_view(), name='Hearts_View'),  # 좋아요 기능 /articles/<int:article_id>/hearts/
     path('<int:user_id>/hearts/',views.HeartsView.as_view(), name='User_Hearts_View'), # 좋아요 한 게시글 /articles/<int:user_id>/hearts/
