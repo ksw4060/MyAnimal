@@ -76,7 +76,7 @@ class ArticlesDetailView(APIView):  # /articles/id/
 
 # ====================== 게시글 좋아요 ================================
 class HeartsView(APIView):
-    def post(self,request, article_id):
+    def post(self, request, article_id):
         article = get_object_or_404(Articles, id=article_id)
         if request.user in article.hearts.all():
             article.hearts.remove(request.user)
@@ -85,10 +85,10 @@ class HeartsView(APIView):
             article.hearts.add(request.user)
             return Response('좋아요', status=status.HTTP_200_OK)
 
-        
-    
+
 # ====================== 좋아요 한 게시글 보기 ================================
-    def get(self,request):
+
+    def get(self, request):
         user = request.user
         article = user.hearts.all()
         serializer = ArticlesSerializer(article, many=True)
@@ -109,7 +109,7 @@ class BookMarksView(APIView):
 
 # ====================== 북마크 한 게시글 보기 ================================
 
-    def get(self,request):
+    def get(self, request):
         user = request.user
         article = user.bookmarks.all()
         serializer = ArticlesSerializer(article, many=True)
