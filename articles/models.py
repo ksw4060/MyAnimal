@@ -47,10 +47,12 @@ class Articles(models.Model):
     def count_bookmarks(self):
         return self.bookmarks.count()
 
+
 '''
 이미지 다중 업로드 받기
 - 게시글과 이미지를 1:N으로 설정해 테이블 생성
 '''
+
 # 이미지 업로드 경로 
 # def image_upload_path(instance, filename):
 #     return f'{instance.article.id}/{filename}'
