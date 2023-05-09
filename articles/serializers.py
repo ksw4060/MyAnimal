@@ -17,7 +17,7 @@ class ArticlesCreateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     class Meta:
         model = Articles
-        fields = '__all__'
+        exclude = ['hearts', 'bookmarks']
         
     def get_user(self, obj):
         return obj.user.email

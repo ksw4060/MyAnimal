@@ -36,7 +36,7 @@ class ArticlesDetailView(APIView): # /articles/id/
      # =================== 글 상세 =================== 
     
     def get(self, request,article_id): # => request.method == 'GET':
-        articles = get_object_or_404(Articles,id=article_id)
+        articles = get_object_or_404(Articles,article_id=article_id)
         serializer = ArticlesSerializer(articles)
         return Response(serializer.data, status=status.HTTP_200_OK)
         

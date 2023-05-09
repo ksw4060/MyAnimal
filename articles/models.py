@@ -6,7 +6,7 @@ from users.models import Users
 
 class Articles(models.Model):
     class Meta:
-        db_table = "Articles"
+        db_table = "Article"
         ordering = ['-article_created_at']  # 게시글 최신순 정렬
 
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
