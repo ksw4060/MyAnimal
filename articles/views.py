@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from articles.models import Articles, Comments
 from articles.serializers import (
     ArticlesSerializer,
-    ArticlesCreateSerializer, 
-    CommentsSerializer, 
+    ArticlesCreateSerializer,
+    CommentsSerializer,
     CommentsCreateSerializer)
 import datetime
 from rest_framework import permissions
@@ -22,11 +22,11 @@ class ArticlesView(APIView):  # /articles/
         articles = Articles.objects.all()
         serializer = ArticlesSerializer(articles, many=True)
 
-        return Response (serializer.data, status=status.HTTP_200_OK)
-            
-    # =================== 글 작성 =================== 
-    
-    def post(self, request): # => request.method == 'POST':
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # =================== 글 작성 ===================
+
+    def post(self, request):  # => request.method == 'POST':
         serializer = ArticlesCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -40,14 +40,8 @@ class ArticlesDetailView(APIView):  # /articles/id/
 
     # =================== 글 상세 ===================
 
-
-# ============================ 글 상세, 수정 클래스 (id 필요) ============================ 
-class ArticlesDetailView(APIView): # /articles/id/
-    
-     # =================== 글 상세 =================== 
-    
-    def get(self, request,article_id): # => request.method == 'GET':
-        articles = get_object_or_404(Articles,article_id=article_id)
+    def get(self, request, article_id):  # => request.method == 'GET':
+        articles = get_object_or_404(Articles, article_id=article_id)
         serializer = ArticlesCreateSerializer(articles)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -57,8 +51,8 @@ class ArticlesDetailView(APIView): # /articles/id/
         articles = get_object_or_404(Articles, id=article_id)  # db 불러오기
         # 로그인된 사용자의 글일때만
         if request.user == articles.user:
-            serializer = ArticlesCreateSerializer(articles, data=request.data) 
-            
+            serializer = ArticlesCreateSerializer(articles, data=request.data)
+
             # 유효성검사를 통과하면
             if serializer.is_valid():
                 articles.updated_at = datetime.datetime.now()  # 업데이트 시간
