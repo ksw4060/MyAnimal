@@ -5,6 +5,11 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework import serializers
 from users.models import Users
+from articles.serializers import ArticlesSerializer
+
+from django.db.models.query_utils import Q
+
+from django.conf import settings
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -48,9 +53,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     followings = serializers.StringRelatedField(many=True)
     followers = serializers.StringRelatedField(many=True)
-    # article_set = ArticlesSerializer(many=True)
-    # like_articles = ArticlesSerializer(many=True)
+    hearts = serializers.StringRelatedField(many=True)
+    bookmarks = serializers.StringRelatedField(many=True)
+    # heartsed_articles = ArticlesSerializer(many=True, source="hearts"),
+    # bookmarked_articles = ArticlesSerializer(many=True, source="bookmarks")
 
     class Meta:
         model = Users
-        fields = ("id", "account", "followings", "followers",)
+        fields = ("id", "account", "followings", "followers",
+                  "hearts", "bookmarks")
+# 작성자 - 이준영

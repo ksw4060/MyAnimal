@@ -7,8 +7,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.shortcuts import render
 from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, UserProfileSerializer
 
+from django.db.models.query_utils import Q
 
 # 로그인, 회원가입 - 김성우
+
+
 class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -29,7 +32,7 @@ class ProfileView(APIView):
         return get_object_or_404(Users, id=user_id)
 
     # 프로필 상세보기, 권한이 없어도 됨.
-    def get(self, requset, user_id):
+    def get(self, request, user_id):
         user = self.get_object(user_id)
         serializer = UserProfileSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -51,12 +54,20 @@ class ProfileView(APIView):
 
 class FollowView(APIView):
     # 팔로우 - 이준영
+    # permission_classes = [IsAuthenticated]
+
     def post(self, request, user_id):
         you = get_object_or_404(Users, id=user_id)
         me = request.user
-        if me in you.followers.all():
-            you.followers.remove(me)
-            return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+        if me.is_authenticated:
+            if me in you.followers.all():
+                you.followers.remove(me)
+                return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+            else:
+                you.followers.add(me)
+                return Response("follow했습니다.", status=status.HTTP_200_OK)
         else:
-            you.followers.add(me)
-            return Response("follow했습니다.", status=status.HTTP_200_OK)
+            return Response("로그인이 필요합니다.", status=status.HTTP_403_FORBIDDEN)
+# 로그인 한 유저만 팔로우 할 수 있게 수정함.
+# 다른 분들 좋아요, 북마크 후
+# 좋아요, 북마크한 글들도 가져올 것이다.
