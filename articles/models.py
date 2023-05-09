@@ -12,8 +12,7 @@ class Articles(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     article_title = models.CharField("글제목", max_length=45)
     article_content = models.TextField("글내용")
-    # article_img = models.FileField(
-    #     "이미지", upload_to='', blank=True, null=True)  # 글 내 이미지 업로드
+    article_img = models.FileField("이미지", upload_to='', blank=True, null=True)  # 글 내 이미지 업로드
     article_created_at = models.DateTimeField(auto_now_add=True)  # 생성시각
     article_updated_at = models.DateTimeField(
         auto_now=True, null=True, blank=True)  # 수정시각
@@ -36,6 +35,9 @@ class Articles(models.Model):
     # 북마크 : 게시글과 사용자를 연결하는 Many To Many 필드입니다.
     bookmarks = models.ManyToManyField(
         Users, blank=True, related_name='bookmarks')
+    
+    def __str__(self):
+        return str(self.article_title)
 
     # 좋아요 갯수 세는 함수
     def count_hearts(self):
@@ -50,18 +52,18 @@ class Articles(models.Model):
 - 게시글과 이미지를 1:N으로 설정해 테이블 생성
 '''
 # 이미지 업로드 경로 
-def image_upload_path(instance, filename):
-    return f'{instance.article.id}/{filename}'
+# def image_upload_path(instance, filename):
+#     return f'{instance.article.id}/{filename}'
 
-class ArticleImage(models.Model):
-    article = models.ForeignKey(Articles, on_delete=models.CASCADE, related_name='image')
-    image = models.ImageField(upload_to=image_upload_path)
+# class ArticleImage(models.Model):
+#     article = models.ForeignKey(Articles, on_delete=models.CASCADE, related_name='image')
+#     image = models.ImageField(upload_to=image_upload_path)
 
-    def __int__(self):
-        return self.id
+#     def __int__(self):
+#         return self.id
 
-    class Meta:
-        db_table = 'article_image'
+#     class Meta:
+#         db_table = 'article_image'
 
 
 # 댓글 models

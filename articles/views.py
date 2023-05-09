@@ -3,7 +3,11 @@ from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from articles.models import Articles, Comments
-from articles.serializers import ArticlesSerializer, CommentsSerializer, CommentsCreateSerializer
+from articles.serializers import (
+    ArticlesSerializer,
+    ArticlesCreateSerializer, 
+    CommentsSerializer, 
+    CommentsCreateSerializer)
 import datetime
 
 # ============================ 글 목록, 작성 클래스 (id 불필요) ============================
@@ -21,7 +25,7 @@ class ArticlesView(APIView):  # /articles/
     # =================== 글 작성 =================== 
     
     def post(self, request): # => request.method == 'POST':
-        serializer = ArticlesSerializer(data=request.data)
+        serializer = ArticlesCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -37,7 +41,7 @@ class ArticlesDetailView(APIView): # /articles/id/
     
     def get(self, request,article_id): # => request.method == 'GET':
         articles = get_object_or_404(Articles,article_id=article_id)
-        serializer = ArticlesSerializer(articles)
+        serializer = ArticlesCreateSerializer(articles)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # =================== 글 수정 ===================
@@ -46,7 +50,7 @@ class ArticlesDetailView(APIView): # /articles/id/
         articles = get_object_or_404(Articles, id=article_id)  # db 불러오기
         # 로그인된 사용자의 글일때만
         if request.user == articles.user:
-            serializer = ArticlesSerializer(articles, data=request.data) 
+            serializer = ArticlesCreateSerializer(articles, data=request.data) 
             
             # 유효성검사를 통과하면
             if serializer.is_valid():
