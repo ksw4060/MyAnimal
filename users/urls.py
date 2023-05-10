@@ -12,8 +12,8 @@ urlpatterns = [
          name='login_view'),  # /users/login/
     path("refresh/", TokenRefreshView.as_view(),
          name="token_refresh"),  # /users/refresh/
-
-    path('profile/<int:user_id>/', views.ProfileView.as_view(), name="profile_view"),
-    path('follow/<int:user_id>/', views.FollowView.as_view(), name='follow_view'),
-
+    path('profile/<int:user_id>/', views.ProfileView.as_view(),
+         name="profile_view"),  # /users/profile/<int:user_id>/
+    path('follow/<int:user_id>/', views.FollowView.as_view(),
+         name='follow_view'),  # /users/follow/<int:user_id>/
 ]
