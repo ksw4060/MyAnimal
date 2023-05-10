@@ -6,6 +6,7 @@ from articles.models import Articles, Comments
 from articles.serializers import (
     ArticlesSerializer,
     ArticlesCreateSerializer,
+    ArticlesUpdateSerializer,
     CommentsSerializer,
     CommentsCreateSerializer)
 import datetime
@@ -52,18 +53,21 @@ class ArticlesDetailView(APIView):  # /articles/id/
         articles = get_object_or_404(Articles, id=article_id)  # db 불러오기
         # 로그인된 사용자의 글일때만
         if request.user == articles.user:
-            serializer = ArticlesCreateSerializer(articles, data=request.data)
+            serializer = ArticlesUpdateSerializer(articles, data=request.data)
 
             # 유효성검사를 통과하면
             if serializer.is_valid():
                 articles.updated_at = datetime.datetime.now()  # 업데이트 시간
-
                 serializer.save(user=request.user)  # db에 저장
+                
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
             else:  # 유효성검사를 통과하지 못하면
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-      # =================== 글 삭제 ===================
+        else: # 로그인된 사용자의 글이 아니라면 
+            return Response({"message":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
+        
+    # =================== 글 삭제 ===================
 
     def delete(self, request, article_id):  # => request.method == 'DELETE':
         articles = Articles.objects.get(id=article_id)  # db 불러오기
