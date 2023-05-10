@@ -58,14 +58,14 @@ class ArticlesDetailView(APIView):  # /articles/id/
             if serializer.is_valid():
                 articles.updated_at = datetime.datetime.now()  # 업데이트 시간
                 serializer.save(user=request.user)  # db에 저장
-                
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
+
             else:  # 유효성검사를 통과하지 못하면
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else: # 로그인된 사용자의 글이 아니라면 
-            return Response({"message":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
-        
+        else:  # 로그인된 사용자의 글이 아니라면
+            return Response({"message": "권한이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
     # =================== 글 삭제 ===================
 
     def delete(self, request, article_id):  # => request.method == 'DELETE':
