@@ -172,3 +172,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # 기본 프로필 이미지 경로
 DEFAULT_PROFILE_IMAGE = 'static/img/die1_1.png'
+
+# EMAIL settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.naver.com"
+# EMAIL_PORT = 587
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'jinijin707@naver.com'
+EMAIL_HOST_PASSWORD = 'flvmf1231**'
+# EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
