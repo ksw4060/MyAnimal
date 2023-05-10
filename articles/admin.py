@@ -5,7 +5,7 @@ from .models import Articles, Comments
 
 
 class ArticlesAdmin(admin.ModelAdmin):
-    exclude = ('hearts', 'bookmarks',)
+    exclude = ()
 
 
 admin.site.register(Articles, ArticlesAdmin)
