@@ -27,7 +27,6 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email=email,
             password=password,
-            profile_img=settings.DEFAULT_PROFILE_IMAGE,   # 기본 이미지
             **extra_fields
         )
         user.is_admin = True
@@ -107,5 +106,5 @@ class Users(AbstractBaseUser):
 # is_staff와 is_admin 분류 해야하고, db에 등록이 안되어 있음.
 
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='user/img/')
+# class Image(models.Model):
+#     image = models.ImageField(upload_to='user/img/')
