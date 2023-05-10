@@ -34,7 +34,6 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
 
 class ArticlesCreateSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
 
     class Meta:
         model = Articles
@@ -52,7 +51,6 @@ class ArticlesUpdateSerializer(serializers.ModelSerializer):
         model = Articles
         fields = ("pk", "user", "article_title",
                   "article_content", "article_img", "category")
-
 
 # comments
 

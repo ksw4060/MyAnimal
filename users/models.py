@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email=email,
             password=password,
-            profile_img=settings.DEFAULT_PROFILE_IMAGE,   # 기본 이미지
+
             **extra_fields
         )
         user.is_admin = True
