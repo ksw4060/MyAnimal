@@ -40,7 +40,7 @@ class Users(AbstractBaseUser):
         db_table = "User"
 
     account = models.CharField("계정", max_length=50, unique=True)
-    nickname = models.CharField("별명", max_length=15, blank=True)
+    nickname = models.CharField("별명", max_length=15)
     email = models.EmailField(
         "이메일 주소",
         max_length=255,
