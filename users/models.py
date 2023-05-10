@@ -105,3 +105,7 @@ class Users(AbstractBaseUser):
         return self.is_admin
 
 # is_staff와 is_admin 분류 해야하고, db에 등록이 안되어 있음.
+
+
+class Image(models.Model):
+    image = models.ImageField(upload_to='user/img/')
