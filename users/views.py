@@ -16,12 +16,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 
+
 from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, UserProfileSerializer
 from .serializers import ImageSerializer, PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread
 
-from .models import Image
 from .models import Users
 
+
+# from .models import Image
+# from .serializers import ImageSerializer
 
 # 로그인, 회원가입 - 김성우
 
@@ -115,7 +118,6 @@ class ProfileView(APIView):
                 return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": "권한이 없습니다!"}, status=status.HTTP_403_FORBIDDEN)
-# 작성자 - 이준영
 # 이미지 업로드, 교체 가능, 삭제는 없음.
 
     # 회원탈퇴 - 0510 채연 추가
@@ -133,7 +135,6 @@ class ProfileView(APIView):
 
 # ========================== 팔로우 =====================================
 class FollowView(APIView):
-    # 팔로우 - 이준영
     # permission_classes = [IsAuthenticated]
     
     def get(self, request, user_id):
@@ -146,8 +147,9 @@ class FollowView(APIView):
         you = get_object_or_404(Users, id=user_id)
         me = request.user
         if me.is_authenticated:
-            if you != request.user: # 채연수정 : 현재 로그인한 유저와 팔로우 대상이 다를경우 (내가 아닌 경우에만 팔로우)
-                
+            # 채연수정 : 현재 로그인한 유저와 팔로우 대상이 다를경우 (내가 아닌 경우에만 팔로우)
+            if you != request.user:
+
                 if me in you.followers.all():
                     you.followers.remove(me)
                     return Response("unfollow했습니다.", status=status.HTTP_200_OK)
@@ -158,16 +160,8 @@ class FollowView(APIView):
                 return Response("로그인이 필요합니다.", status=status.HTTP_403_FORBIDDEN)
         else:
             return Response("", status=status.HTTP_400_BAD_REQUEST)
-            
+
 # 로그인 한 유저만 팔로우 할 수 있게 수정함.
-
-
-# ========================== 이미지 뷰 =====================================
-class ImageView(CreateAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    parser_classes = (MultiPartParser, FormParser)
-
 
 
 # 비밀번호 찾기
@@ -219,3 +213,10 @@ class ObtainUserTokenView(APIView):
             token, _ = Token.objects.get_or_create(user=user)
             return Response({"token": token.key}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# # ========================== 이미지 뷰 =====================================
+# class ImageView(CreateAPIView):
+#     queryset = Image.objects.all()
+#     serializer_class = ImageSerializer
+#     parser_classes = (MultiPartParser, FormParser)
+

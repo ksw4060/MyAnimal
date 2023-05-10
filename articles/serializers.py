@@ -8,7 +8,8 @@ from articles.models import Articles, Comments
 #     class Meta:
 #         model = ArticleImage
 #         fields = ['image']
-        
+
+
 class ArticlesSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
@@ -18,10 +19,10 @@ class ArticlesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Articles
         fields = "__all__"
-    
+
     # #게시글에 등록된 이미지들 가지고 오기
     # def get_images(self, obj):
-    #     image = obj.image.all() 
+    #     image = obj.image.all()
     #     return ArticleImageSerializer(instance=image, many=True, context=self.context).data
 
     # def create(self, validated_data):
@@ -30,22 +31,30 @@ class ArticlesSerializer(serializers.ModelSerializer):
     #     for image_data in image_set.getlist('image'):
     #         ArticleImage.objects.create(article=instance, image=image_data)
     #     return instance
-    
+
+
 class ArticlesCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Articles
-        fields = ("article_title","article_content","article_img","category")
-        
+        fields = ("article_title", "article_content",
+                  "article_img", "category")
+
+
 class ArticlesUpdateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-    
+
     def get_user(self, obj):
         return obj.user.nickname
+
     class Meta:
         model = Articles
-        fields = ("pk","user", "article_title","article_content","article_img","category")
+        fields = ("pk", "user", "article_title",
+                  "article_content", "article_img", "category")
 
 # comments
+
+
 class CommentsSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
