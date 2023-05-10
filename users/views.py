@@ -69,14 +69,19 @@ class FollowView(APIView):
         you = get_object_or_404(Users, id=user_id)
         me = request.user
         if me.is_authenticated:
-            if me in you.followers.all():
-                you.followers.remove(me)
-                return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+            if you != request.user: # 채연수정 : 현재 로그인한 유저와 팔로우 대상이 다를경우 (내가 아닌 경우에만 팔로우)
+                
+                if me in you.followers.all():
+                    you.followers.remove(me)
+                    return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+                else:
+                    you.followers.add(me)
+                    return Response("follow했습니다.", status=status.HTTP_200_OK)
             else:
-                you.followers.add(me)
-                return Response("follow했습니다.", status=status.HTTP_200_OK)
+                return Response("로그인이 필요합니다.", status=status.HTTP_403_FORBIDDEN)
         else:
-            return Response("로그인이 필요합니다.", status=status.HTTP_403_FORBIDDEN)
+            return Response("", status=status.HTTP_400_BAD_REQUEST)
+            
 # 로그인 한 유저만 팔로우 할 수 있게 수정함.
 
 

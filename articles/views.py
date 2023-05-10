@@ -13,8 +13,7 @@ import datetime
 from rest_framework import permissions
 
 
-# ============================ 글 목록, 작성 클래스 (id 불필요) ============================
-
+# ============================ 글 목록, 작성 클래스 (id 불필요) : 채연 ============================
 
 class ArticlesView(APIView):  # /articles/
 
@@ -37,7 +36,7 @@ class ArticlesView(APIView):  # /articles/
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ============================ 글 상세, 수정 클래스 (id 필요) ============================
+# ============================ 글 상세, 수정 클래스 (id 필요) : 채연 ============================
 class ArticlesDetailView(APIView):  # /articles/id/
 
     # =================== 글 상세 ===================
