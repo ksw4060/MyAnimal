@@ -41,17 +41,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['email'] = user.email
-        token['account'] = user.account
-        return token
-
-# 빈 값을 넣으면 default 가 안된다.
-
-
 class UserProfileSerializer(serializers.ModelSerializer):
     followings = serializers.StringRelatedField(many=True)
     followers = serializers.StringRelatedField(many=True)
