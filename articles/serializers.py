@@ -34,7 +34,6 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
 
 class ArticlesCreateSerializer(serializers.ModelSerializer):
-    # user = serializers.SerializerMethodField()
     class Meta:
         model = Articles
         fields = ("article_title", "article_content",
