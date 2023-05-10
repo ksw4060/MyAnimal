@@ -40,7 +40,7 @@ class Users(AbstractBaseUser):
         db_table = "User"
 
     account = models.CharField("계정", max_length=50, unique=True)
-    nickname = models.CharField("별명", max_length=15, blank=True)
+    nickname = models.CharField("별명", max_length=15)
     email = models.EmailField(
         "이메일 주소",
         max_length=255,
@@ -105,3 +105,7 @@ class Users(AbstractBaseUser):
         return self.is_admin
 
 # is_staff와 is_admin 분류 해야하고, db에 등록이 안되어 있음.
+
+
+class Image(models.Model):
+    image = models.ImageField(upload_to='user/img/')

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from articles.models import Articles, Comments
-# articles
 
 # 이미지 업로드 시리얼라이저 - 이미지 직렬화
 # class ArticleImageSerializer(serializers.ModelSerializer):
@@ -15,7 +14,7 @@ class ArticlesSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_user(self, obj):
-        return obj.user.name
+        return obj.user.nickname
 
     class Meta:
         model = Articles
@@ -35,11 +34,25 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
 
 class ArticlesCreateSerializer(serializers.ModelSerializer):
-    # user = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
+
     class Meta:
         model = Articles
         fields = ("article_title", "article_content",
                   "article_img", "category")
+
+
+class ArticlesUpdateSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.nickname
+
+    class Meta:
+        model = Articles
+        fields = ("pk", "user", "article_title",
+                  "article_content", "article_img", "category")
+
 
 # comments
 
