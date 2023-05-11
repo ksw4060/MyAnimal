@@ -107,13 +107,11 @@ class ProfileView(APIView):
     # 프로필 수정, 권한이 있어야함.
     def patch(self, request, user_id):
         user = self.get_object(user_id)
-        print(f"{request.data=}")
         if user == request.user:
             serializer = UserProfileSerializer(
                 user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                print(f"{serializer.data=}")
                 return Response({"message": "수정완료!"}, status=status.HTTP_200_OK)
             else:
                 return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
