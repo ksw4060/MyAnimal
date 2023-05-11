@@ -100,9 +100,12 @@ class ProfileView(APIView):
 
     # 프로필 상세보기, 권한이 없어도 됨.
     def get(self, request, user_id):
-        user = self.get_object(user_id)
-        serializer = UserProfileSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            user = self.get_object(user_id)
+            serializer = UserProfileSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response({"message": "잘못된 주소입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
     # 프로필 수정, 권한이 있어야함.
     def patch(self, request, user_id):
