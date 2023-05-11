@@ -13,13 +13,13 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from rest_framework import serializers,exceptions
+from rest_framework import serializers, exceptions
 from users.models import Users
 from articles.serializers import ArticlesSerializer
 
 
 from articles.serializers import ArticlesSerializer
-from users.models import Image, Users
+from users.models import Users
 
 import threading
 
@@ -29,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = Users
         exclude = ("followings",)
     # 회원가입
+
     def create(self, validated_data):
         user = super().create(validated_data)
         password = user.password
@@ -36,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
     # 로그인
+
     def update(self, instance, validated_data):
         user = super().update(instance, validated_data)
         password = user.password
@@ -53,16 +55,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-
 # 빈 값을 넣으면 default 가 안된다.
 
 class UserProfileSerializer(serializers.ModelSerializer):
     followings = serializers.StringRelatedField(many=True)
     followers = serializers.StringRelatedField(many=True)
-    # hearts = serializers.StringRelatedField(many=True)
-    hearted_articles = ArticlesSerializer(many=True, source="hearts")
-    # bookmarks = serializers.StringRelatedField(many=True)
-    bookmarked_articles = ArticlesSerializer(many=True, source="bookmarks")
+    hearts_count = serializers.SerializerMethodField()
+    bookmarks_count = serializers.SerializerMethodField()
     profile_img = serializers.ImageField(
         max_length=None,
         use_url=True,
@@ -71,12 +70,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
         default=settings.DEFAULT_PROFILE_IMAGE
     )
 
+    def get_hearts_count(self, obj):
+        return obj.hearts.count()
+
+    def get_bookmarks_count(self, obj):
+        return obj.bookmarks.count()
+
     class Meta:
         model = Users
         fields = ("account", "nickname",
                   "email", "profile_img",
                   "category", "followings",
-                  "followers", "hearted_articles", "bookmarked_articles")
+                  "followers", "hearts_count", "bookmarks_count")
 
     def clean_img(self):
         img = self.cleaned_data.get('profile_img')
@@ -85,23 +90,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return img
 
 
-# class ImageSerializer(serializers.ModelSerializer):
-#     image = serializers.ImageField(max_length=None, use_url=True)
-
-
-    class Meta:
-        model = Image
-        fields = ('id', 'image')
-# 작성자 - 이준영
-
-
-
 class EmailThread(threading.Thread):
-    
+
     def __init__(self, email):
         self.email = email
         threading.Thread.__init__(self)
-        
+
     def run(self):
         self.email.send()
 
@@ -110,7 +104,8 @@ class Util:
 
     @staticmethod
     def send_email(message):
-        email = EmailMessage(subject=message["email_subject"], body=message["email_body"], to=[message["to_email"]])
+        email = EmailMessage(subject=message["email_subject"], body=message["email_body"], to=[
+                             message["to_email"]])
         EmailThread(email).start()
 
 
@@ -143,7 +138,8 @@ class PasswordResetSerializer(serializers.Serializer):
             return super().validate(attrs)
 
         except Users.DoesNotExist:
-            raise serializers.ValidationError(detail={"email": "잘못된 이메일입니다. 다시 입력해주세요."})
+            raise serializers.ValidationError(
+                detail={"email": "잘못된 이메일입니다. 다시 입력해주세요."})
 
 
 # 비밀번호 재설정 serializer
@@ -184,7 +180,8 @@ class SetNewPasswordSerializer(serializers.Serializer):
             if PasswordResetTokenGenerator().check_token(user, token) == False:
                 raise exceptions.AuthenticationFailed("토큰이 유효하지 않습니다.", 401)
             if password != repassword:
-                raise serializers.ValidationError(detail={"repassword": "비밀번호가 일치하지 않습니다."})
+                raise serializers.ValidationError(
+                    detail={"repassword": "비밀번호가 일치하지 않습니다."})
 
             user.set_password(password)
             user.save()
@@ -192,7 +189,8 @@ class SetNewPasswordSerializer(serializers.Serializer):
             return super().validate(attrs)
 
         except Users.DoesNotExist:
-            raise serializers.ValidationError(detail={"user": "존재하지 않는 회원입니다."})
+            raise serializers.ValidationError(
+                detail={"user": "존재하지 않는 회원입니다."})
 
 
 # User Token 획득
@@ -201,8 +199,3 @@ class TokenSerializer(serializers.Serializer):
     password = serializers.CharField(
         write_only=True,
     )
-
-#     class Meta:
-#         model = Image
-#         fields = ('id', 'image')
-
