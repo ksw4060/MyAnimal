@@ -19,7 +19,7 @@ from articles.serializers import ArticlesSerializer
 
 
 from articles.serializers import ArticlesSerializer
-from users.models import Image, Users
+from users.models import Users
 
 import threading
 
@@ -60,10 +60,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     followings = serializers.StringRelatedField(many=True)
     followers = serializers.StringRelatedField(many=True)
-    # hearts = serializers.StringRelatedField(many=True)
-    hearted_articles = ArticlesSerializer(many=True, source="hearts")
-    # bookmarks = serializers.StringRelatedField(many=True)
-    bookmarked_articles = ArticlesSerializer(many=True, source="bookmarks")
+    hearts_count = serializers.SerializerMethodField()
+    bookmarks_count = serializers.SerializerMethodField()
     profile_img = serializers.ImageField(
         max_length=None,
         use_url=True,
@@ -72,12 +70,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
         default=settings.DEFAULT_PROFILE_IMAGE
     )
 
+    def get_hearts_count(self, obj):
+        return obj.hearts.count()
+
+    def get_bookmarks_count(self, obj):
+        return obj.bookmarks.count()
+
     class Meta:
         model = Users
         fields = ("account", "nickname",
                   "email", "profile_img",
                   "category", "followings",
-                  "followers", "hearted_articles", "bookmarked_articles")
+                  "followers", "hearts_count", "bookmarks_count")
 
     def clean_img(self):
         img = self.cleaned_data.get('profile_img')
@@ -86,6 +90,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return img
 
 
+<<<<<<< HEAD
 # class ImageSerializer(serializers.ModelSerializer):
 #     image = serializers.ImageField(max_length=None, use_url=True)
 
@@ -96,6 +101,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 # 작성자 - 이준영
 
 
+=======
+>>>>>>> 4874110f3676d149bb1465e6fa4f7820a186909c
 class EmailThread(threading.Thread):
 
     def __init__(self, email):
@@ -205,7 +212,10 @@ class TokenSerializer(serializers.Serializer):
     password = serializers.CharField(
         write_only=True,
     )
+<<<<<<< HEAD
 
 #     class Meta:
 #         model = Image
 #         fields = ('id', 'image')
+=======
+>>>>>>> 4874110f3676d149bb1465e6fa4f7820a186909c
