@@ -163,7 +163,7 @@ class FollowView(APIView):
 # 로그인 한 유저만 팔로우 할 수 있게 수정함.
 
 
-# 비밀번호 찾기
+# 비밀번호 찾기 (이메일 보내기)
 class PasswordResetView(APIView):
 
     def post(self, request):
