@@ -2,7 +2,7 @@ from base64 import urlsafe_b64decode, urlsafe_b64encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth import authenticate
 from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import DjangoUnicodeDecodeError, force_str,force_bytes
+from django.utils.encoding import DjangoUnicodeDecodeError, force_str, force_bytes
 from django.db.models.query_utils import Q
 from django.shortcuts import render
 from django.core.mail import EmailMessage
@@ -18,7 +18,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 
 from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, UserProfileSerializer
-from .serializers import ImageSerializer, PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread
+from .serializers import PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread
 
 from .models import Users
 
@@ -33,10 +33,11 @@ class Util:
 
     @staticmethod
     def send_email(message):
-        email = EmailMessage(subject=message["email_subject"], body=message["email_body"], to=[message["to_email"]])
+        email = EmailMessage(subject=message["email_subject"], body=message["email_body"], to=[
+                             message["to_email"]])
         EmailThread(email).start()
-        
-        
+
+
 class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -44,14 +45,14 @@ class SignupView(APIView):
             user = serializer.save()
             user.is_active = False
             user = serializer.save()
-                        
+
             # 토큰 생성
-            
+
             uid = urlsafe_b64encode(force_bytes(user.pk))
             token = PasswordResetTokenGenerator().make_token(user)
-            
+
             # 이메일 전송
-            
+
             email = user.email
             authurl = f'http://localhost:8000/verify-email/{uid}/{token}/'
             email_body = "이메일 인증" + authurl
@@ -61,12 +62,12 @@ class SignupView(APIView):
                 "email_subject": "이메일 인증",
             }
             Util.send_email(message)
-            
+
             return Response({"message": "가입완료!"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": f"${serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
+
+
 class VerifyEmailView(APIView):
     def get(self, request, uidb64, token):
         try:
@@ -85,7 +86,7 @@ class VerifyEmailView(APIView):
             return Response({"message": "이메일 인증이 완료되었습니다."}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "잘못된 링크입니다."}, status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 # 로그인
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -123,25 +124,23 @@ class ProfileView(APIView):
     # 회원탈퇴 - 0510 채연 추가
     def delete(self, request, user_id):
         user = get_object_or_404(Users, id=user_id)
- 
-        if request.user==user:
+
+        if request.user == user:
             request.user.is_active = False
             request.user.save()
-            return Response({'message':'회원탈퇴'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            return Response({'message': '회원탈퇴'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         else:
-            return Response({'error':'권한이 없습니다!'}, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'error': '권한이 없습니다!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ========================== 팔로우 =====================================
 class FollowView(APIView):
     # permission_classes = [IsAuthenticated]
-    
+
     def get(self, request, user_id):
         you = get_object_or_404(Users, id=user_id)
         serializer = UserProfileSerializer(you)
         return Response(serializer.data)
-
 
     def post(self, request, user_id):
         you = get_object_or_404(Users, id=user_id)
@@ -202,9 +201,10 @@ class SetNewPasswordView(APIView):
 
 # 회원정보 인증 토큰 발급
 class ObtainUserTokenView(APIView):
-    
+
     def post(self, request):
-        serializer = TokenSerializer(data=request.data, context={"request": request})
+        serializer = TokenSerializer(
+            data=request.data, context={"request": request})
         if serializer.is_valid():
             user = authenticate(
                 email=serializer.validated_data["email"],
@@ -219,4 +219,3 @@ class ObtainUserTokenView(APIView):
 #     queryset = Image.objects.all()
 #     serializer_class = ImageSerializer
 #     parser_classes = (MultiPartParser, FormParser)
-
