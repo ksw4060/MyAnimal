@@ -54,7 +54,7 @@ class SignupView(APIView):
             # 이메일 전송
 
             email = user.email
-            authurl = f'http://localhost:8000/verify-email/{uid}/{token}/'
+            authurl = f'http://localhost:8000/users/verify-email/{uid}/{token}/'
             email_body = "이메일 인증" + authurl
             message = {
                 "email_body": email_body,
