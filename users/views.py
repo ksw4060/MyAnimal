@@ -211,3 +211,9 @@ class ObtainUserTokenView(APIView):
             token, _ = Token.objects.get_or_create(user=user)
             return Response({"token": token.key}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# # ========================== 이미지 뷰 =====================================
+# class ImageView(CreateAPIView):
+#     queryset = Image.objects.all()
+#     serializer_class = ImageSerializer
+#     parser_classes = (MultiPartParser, FormParser)
