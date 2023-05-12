@@ -60,8 +60,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     followings = serializers.StringRelatedField(many=True)
     followers = serializers.StringRelatedField(many=True)
-    hearts_count = serializers.SerializerMethodField()
-    bookmarks_count = serializers.SerializerMethodField()
+    # articles_count = ArticlesSerializer  # 작성한 게시글
+    # receive_hearts_count = serializers.SerializerMethodField()  # 받은 좋아요 수
+    hearted_articles_count = serializers.SerializerMethodField()  # 내가 하트한 수
+    bookmarked_articles_count = serializers.SerializerMethodField()  # 내가 북마크한 수
+
     profile_img = serializers.ImageField(
         max_length=None,
         use_url=True,
@@ -70,10 +73,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         default=settings.DEFAULT_PROFILE_IMAGE
     )
 
-    def get_hearts_count(self, obj):
+    def get_hearted_articles_count(self, obj):
         return obj.hearts.count()
 
-    def get_bookmarks_count(self, obj):
+    def get_bookmarked_articles_count(self, obj):
         return obj.bookmarks.count()
 
     class Meta:
@@ -81,7 +84,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ("account", "nickname",
                   "email", "profile_img",
                   "category", "followings",
-                  "followers", "hearts_count", "bookmarks_count")
+                  "followers", "hearted_articles_count", "bookmarked_articles_count")
 
     def clean_img(self):
         img = self.cleaned_data.get('profile_img')
