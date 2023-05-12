@@ -12,7 +12,8 @@ from articles.serializers import (
 import datetime
 from rest_framework import permissions
 
-
+from users.models import Users
+from django.db.models import Sum
 # ============================ 글 목록, 작성 클래스 (id 불필요) : 채연 ============================
 
 class ArticlesView(APIView):  # /articles/
@@ -20,9 +21,14 @@ class ArticlesView(APIView):  # /articles/
     # =================== 글 목록 ===================
 
     def get(self, request):  # => request.method == 'GET':
-        articles = Articles.objects.all()
-        serializer = ArticlesSerializer(articles, many=True)
+        category = request.GET.get('category')
 
+        if category:  # 카테고리 파라미터가 있는 경우 해당 카테고리의 게시글 보여줌
+            articles = Articles.objects.filter(category=category)
+        else:  # 카테고리 파라미터가 없는 경우 모든 게시글 보여주기
+            articles = Articles.objects.all()
+
+        serializer = ArticlesSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # =================== 글 작성 ===================
@@ -35,6 +41,28 @@ class ArticlesView(APIView):  # /articles/
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# =================== 글 리스트 목록 ===================
+class ArticlesListView(APIView):  # /articles/list/<int:user_id>/
+    def get(self, request, user_id):  # => request.method == 'GET':
+        articles = Articles.objects.filter(user_id=user_id)
+        serializer = ArticlesSerializer(articles, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+# =================== 하트 받은 수 ===================
+class ReceivedHeartsView(APIView):  # /articles/received/hearts/<int:user_id>/
+    def get(self, request, user_id):  # => request.method == 'GET':
+        articles = Articles.objects.filter(user_id=user_id)  # 해당 사용자가 작성한 게시물들을 가져옴
+        
+        received_hearts = 0  # 받은 좋아요 수 초기화
+        
+        for article in articles:
+            received_hearts += article.hearts.all().count()  # 각 게시물의 좋아요 수를 합산
+
+        # 받은 좋아요 수 출력
+        # print(f"사용자가 받은 좋아요 수: {received_hearts}")
+
+        return Response(received_hearts, status=status.HTTP_200_OK)
 
 # ============================ 글 상세, 수정 클래스 (id 필요) : 채연 ============================
 class ArticlesDetailView(APIView):  # /articles/id/
@@ -58,14 +86,14 @@ class ArticlesDetailView(APIView):  # /articles/id/
             if serializer.is_valid():
                 articles.updated_at = datetime.datetime.now()  # 업데이트 시간
                 serializer.save(user=request.user)  # db에 저장
-                
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
+
             else:  # 유효성검사를 통과하지 못하면
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else: # 로그인된 사용자의 글이 아니라면 
-            return Response({"message":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
-        
+        else:  # 로그인된 사용자의 글이 아니라면
+            return Response({"message": "권한이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
     # =================== 글 삭제 ===================
 
     def delete(self, request, article_id):  # => request.method == 'DELETE':
