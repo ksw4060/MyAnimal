@@ -4,7 +4,6 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_bytes, force_str
 from django.contrib.auth import authenticate
 from django.db.models.query_utils import Q
-from django.conf import settings
 from django.core.mail import EmailMessage
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -22,6 +21,8 @@ from articles.serializers import ArticlesSerializer
 from users.models import Users
 
 import threading
+
+from django.conf import settings
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -70,7 +71,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         use_url=True,
         required=False,  # 입력값이 없어도 유효성 검사를 통과
         # allow_null=True,
-        default=settings.DEFAULT_PROFILE_IMAGE
+        default='default/die1_1.png'
     )
 
     def get_hearted_articles_count(self, obj):

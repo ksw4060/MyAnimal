@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('articles/', include('articles.urls')),
-]
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL,
+           document_root=settings.MEDIA_ROOT)
+
+# 배포 시에는 디버그 모드를 꺼야 하기에 다른 방식으로 설정해야한다고 말씀하셨다.
