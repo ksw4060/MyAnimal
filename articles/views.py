@@ -24,7 +24,7 @@ class ArticlesView(APIView):  # /articles/
         if category:  # 카테고리 파라미터가 있는 경우 해당 카테고리의 게시글 보여줌
             articles = Articles.objects.filter(category=category)
         else:  # 카테고리 파라미터가 없는 경우 모든 게시글 보여주기
-            articles = Articles.objects.all()
+            articles = Articles.objects.all()  # 이부분만 추가햇습니다(소진)
 
         serializer = ArticlesSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -94,7 +94,6 @@ class HeartsView(APIView):
 
 
 # ====================== 좋아요 한 게시글 보기 ================================
-
 
     def get(self, request):
         user = request.user
