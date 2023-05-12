@@ -34,11 +34,14 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
 
 class ArticlesCreateSerializer(serializers.ModelSerializer):
-
+    user = serializers.SerializerMethodField()
+    
+    def get_user(self, obj):
+        return obj.user.nickname
     class Meta:
         model = Articles
-        fields = ("article_title", "article_content",
-                  "article_img", "category")
+        fields = ("pk", "user","article_title", "article_content",
+                  "article_img", "category","article_created_at","article_updated_at")
 
 
 class ArticlesUpdateSerializer(serializers.ModelSerializer):
@@ -59,7 +62,7 @@ class CommentsSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
     def get_user(self, obj):
-        return obj.user.email
+        return obj.user.nickname
 
     class Meta:
         model = Comments
