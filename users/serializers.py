@@ -90,19 +90,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return img
 
 
-<<<<<<< HEAD
-# class ImageSerializer(serializers.ModelSerializer):
-#     image = serializers.ImageField(max_length=None, use_url=True)
-
-
-    class Meta:
-        model = Image
-        fields = ('id', 'image')
-# 작성자 - 이준영
-
-
-=======
->>>>>>> 4874110f3676d149bb1465e6fa4f7820a186909c
 class EmailThread(threading.Thread):
 
     def __init__(self, email):
@@ -212,10 +199,8 @@ class TokenSerializer(serializers.Serializer):
     password = serializers.CharField(
         write_only=True,
     )
-<<<<<<< HEAD
+
 
 #     class Meta:
 #         model = Image
 #         fields = ('id', 'image')
-=======
->>>>>>> 4874110f3676d149bb1465e6fa4f7820a186909c

@@ -20,9 +20,13 @@ class ArticlesView(APIView):  # /articles/
     # =================== 글 목록 ===================
 
     def get(self, request):  # => request.method == 'GET':
-        articles = Articles.objects.all()
-        serializer = ArticlesSerializer(articles, many=True)
+        category = request.GET.get('category')
+        if category:  # 카테고리 파라미터가 있는 경우 해당 카테고리의 게시글 보여줌
+            articles = Articles.objects.filter(category=category)
+        else:  # 카테고리 파라미터가 없는 경우 모든 게시글 보여주기
+            articles = Articles.objects.all()
 
+        serializer = ArticlesSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # =================== 글 작성 ===================
@@ -58,14 +62,14 @@ class ArticlesDetailView(APIView):  # /articles/id/
             if serializer.is_valid():
                 articles.updated_at = datetime.datetime.now()  # 업데이트 시간
                 serializer.save(user=request.user)  # db에 저장
-                
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
+
             else:  # 유효성검사를 통과하지 못하면
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else: # 로그인된 사용자의 글이 아니라면 
-            return Response({"message":"권한이 없습니다."},status=status.HTTP_400_BAD_REQUEST)
-        
+        else:  # 로그인된 사용자의 글이 아니라면
+            return Response({"message": "권한이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
     # =================== 글 삭제 ===================
 
     def delete(self, request, article_id):  # => request.method == 'DELETE':
@@ -90,6 +94,7 @@ class HeartsView(APIView):
 
 
 # ====================== 좋아요 한 게시글 보기 ================================
+
 
     def get(self, request):
         user = request.user
