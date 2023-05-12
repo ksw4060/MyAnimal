@@ -202,3 +202,8 @@ class TokenSerializer(serializers.Serializer):
     password = serializers.CharField(
         write_only=True,
     )
+
+
+#     class Meta:
+#         model = Image
+#         fields = ('id', 'image')
