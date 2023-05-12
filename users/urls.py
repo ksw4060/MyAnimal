@@ -13,21 +13,14 @@ urlpatterns = [
     path("refresh/", TokenRefreshView.as_view(),
          name="token_refresh"),  # /users/refresh/
 
-    path('profile/<int:user_id>/', views.ProfileView.as_view(),
-         name="profile_view"),  # /users/profile/<int:user_id>/
-    path('follow/<int:user_id>/', views.FollowView.as_view(),
-         name='follow_view'),  # /users/follow/<int:user_id>/
-    path("withdraw/<int:user_id>/", views.ProfileView.as_view(),
-         name="token_refresh"),  # /users/withdraw/
+    path("auth/password/reset/", views.PasswordResetView.as_view(),
+         name="password_reset"),  # 비밀번호 찾기 (이메일 보내기)
+    path("auth/password/reset/b'<str:uidb64>'/<str:token>/",
+         views.PasswordTokenCheckView.as_view(), name="password_reset_confirm"),  # 비밀번호 재설정 토큰 확인
+    path("auth/password/reset/confirm/", views.SetNewPasswordView.as_view(),
+         name="password_reset_confirm"),  # 비밀번호 재설정
 
-    path("auth/password/reset/",
-         views.PasswordResetView.as_view(), name="password_reset"),
-    path("auth/password/reset/<uidb64>/<token>/",
-         views.PasswordTokenCheckView.as_view(), name="password_reset_confirm"),
-    path("auth/password/reset/confirm/",
-         views.SetNewPasswordView.as_view(), name="password_reset_confirm"),
-
-    path('verify-email/<str:uidb64>/<str:token>/',
+    path("verify-email/b'<str:uidb64>'/<str:token>/",
          views.VerifyEmailView.as_view(), name='verify-email'),
 
 ]

@@ -18,7 +18,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 
 from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, UserProfileSerializer
-from .serializers import ImageSerializer, PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread
+from .serializers import PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread
 
 from .models import Users
 
@@ -54,7 +54,7 @@ class SignupView(APIView):
             # 이메일 전송
 
             email = user.email
-            authurl = f'http://localhost:8000/verify-email/{uid}/{token}/'
+            authurl = f'http://localhost:8000/users/verify-email/{uid}/{token}/'
             email_body = "이메일 인증" + authurl
             message = {
                 "email_body": email_body,
@@ -107,13 +107,11 @@ class ProfileView(APIView):
     # 프로필 수정, 권한이 있어야함.
     def patch(self, request, user_id):
         user = self.get_object(user_id)
-        print(f"{request.data=}")
         if user == request.user:
             serializer = UserProfileSerializer(
                 user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                print(f"{serializer.data=}")
                 return Response({"message": "수정완료!"}, status=status.HTTP_200_OK)
             else:
                 return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -163,7 +161,7 @@ class FollowView(APIView):
 # 로그인 한 유저만 팔로우 할 수 있게 수정함.
 
 
-# 비밀번호 찾기
+# 비밀번호 찾기 (이메일 보내기)
 class PasswordResetView(APIView):
 
     def post(self, request):
