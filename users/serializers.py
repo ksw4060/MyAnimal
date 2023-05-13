@@ -205,6 +205,6 @@ class TokenSerializer(serializers.Serializer):
     )
 
 
-#     class Meta:
-#         model = Image
-#         fields = ('id', 'image')
+# 비밀번호 체크
+class PasswordVerificationSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=128)
