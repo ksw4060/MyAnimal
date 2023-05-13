@@ -8,7 +8,7 @@ urlpatterns = [
     path('<int:article_id>/',views.ArticlesDetailView.as_view(), name = 'article_detail'), # /articles/<int:article_id>/
     
 
-    path('<int:article_id>/hearts/', views.HeartsView.as_view(), name='Hearts_view'),  # 좋아요 기능
+    path('<int:article_id>/hearts/', views.HeartsView.as_view(), name='Hearts_view'),  # 좋아요 기능 / 게시글 좋아요 수
     path('hearts/',views.HeartsView.as_view(), name='User_Hearts_View'), # 좋아요 한 게시글
   
     path('<int:article_id>/bookmarks/',views.BookMarksView.as_view(), name='bookmarks_View'),  # 북마크 기능

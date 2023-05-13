@@ -138,7 +138,7 @@ class FollowView(APIView):
     def get(self, request, user_id):
         you = get_object_or_404(Users, id=user_id)
         serializer = UserProfileSerializer(you)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, user_id):
         you = get_object_or_404(Users, id=user_id)

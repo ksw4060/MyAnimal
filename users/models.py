@@ -46,7 +46,7 @@ class Users(AbstractBaseUser):
     )
     profile_img = models.ImageField(
         "프로필 이미지",
-        upload_to='media/users/',
+        upload_to='users/%Y%m%d',
         # height_field=None,
         # width_field=None,
         # max_length=None,

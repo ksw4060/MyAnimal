@@ -70,7 +70,7 @@ class ArticlesDetailView(APIView):  # /articles/id/
     # =================== 글 상세 ===================
 
     def get(self, request, article_id):  # => request.method == 'GET':
-        articles = get_object_or_404(Articles, article_id=article_id)
+        articles = get_object_or_404(Articles, id=article_id)
         serializer = ArticlesCreateSerializer(articles)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -124,6 +124,14 @@ class HeartsView(APIView):
         article = user.hearts.all()
         serializer = ArticlesSerializer(article, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+# ====================== 게시글의 좋아요 ================================   
+    def get(self, request, article_id):
+        article = Articles.objects.get(id=article_id)
+        heart_count = article.count_hearts()
+        return Response({'hearts': heart_count})
+    
+
 
 # ====================== 게시글 북마크 ================================
 
@@ -137,6 +145,8 @@ class BookMarksView(APIView):
         else:
             articles.bookmarks.add(request.user)
             return Response('북마크', status=status.HTTP_200_OK)
+        
+
 
 # ====================== 북마크 한 게시글 보기 ================================
 
@@ -146,6 +156,11 @@ class BookMarksView(APIView):
         serializer = ArticlesSerializer(article, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # ====================== 게시글의 북마크 ================================   
+    def get(self, request, article_id):
+        article = Articles.objects.get(id=article_id)
+        bookmark_count = article.count_bookmarks()
+        return Response({'bookmarks': bookmark_count})
 
 # ====================== 댓글 목록, 작성 클래스 ================================
 
