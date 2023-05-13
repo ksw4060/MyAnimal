@@ -71,7 +71,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         use_url=True,
         required=False,  # 입력값이 없어도 유효성 검사를 통과
         # allow_null=True,
-        default='default/die1_1.png'
+        # default='default/die1_1.png'
     )
 
     def get_hearted_articles_count(self, obj):
