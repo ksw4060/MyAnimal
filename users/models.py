@@ -14,7 +14,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             account=account,
             email=self.normalize_email(email),  # 소문자로 바꾼 후 정규화 체크
-            profile_img='default/die1_1.png',   # 기본 이미지
+            # profile_img='default/die1_1.png',   # 기본 이미지
             **extra_fields
         )
         user.set_password(password)
@@ -51,7 +51,7 @@ class Users(AbstractBaseUser):
         # width_field=None,
         # max_length=None,
         # default='static/img/die1_1.png',  # default 이미지
-        default='default/die1_1.png',  # default 이미지
+        # default='default/die1_1.png',  # default 이미지
         blank=True,
     )
     # default(line)
