@@ -47,7 +47,7 @@
     - 상세페이지
         - 해당 게시글의 상세 페이지
         
-4. 게시글 UPDATE `PUT`
+4. 게시글 UPDATE `PATCH`
     - **로그인한 사용자이면서 글 작성자일 때만 가능**
 
 5. 게시글 DELETE `DELETE`
@@ -60,4 +60,5 @@
 
 ERD
 ------
+![image](https://github.com/ksw406020230309/MyAnimal/assets/120750451/3f791fe2-1060-40c3-856c-40010e035d9a)
 
