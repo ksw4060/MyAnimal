@@ -125,6 +125,7 @@ class ArticlesDetailView(APIView):  # /articles/id/
 
 
 # ====================== 게시글 좋아요 ================================
+
 class HeartsView(APIView):
     def post(self, request, article_id):
         article = get_object_or_404(Articles, id=article_id)
@@ -134,7 +135,6 @@ class HeartsView(APIView):
         else:
             article.hearts.add(request.user)
             return Response('좋아요', status=status.HTTP_200_OK)
-
 
 # ====================== 좋아요 한 게시글 보기 ================================
 

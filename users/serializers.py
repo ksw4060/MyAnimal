@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+
 from rest_framework import serializers, exceptions
 from users.models import Users
 from articles.serializers import ArticlesSerializer
@@ -53,6 +54,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['email'] = user.email
         token['account'] = user.account
+        token['nickname'] = user.nickname
         return token
 
 
