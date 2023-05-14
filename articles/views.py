@@ -128,12 +128,15 @@ class ArticlesDetailView(APIView):  # /articles/id/
 class HeartsView(APIView):
     def post(self, request, article_id):
         article = get_object_or_404(Articles, id=article_id)
-        if request.user in article.hearts.all():
-            article.hearts.remove(request.user)
-            return Response('좋아요 취소', status=status.HTTP_200_OK)
+        if request.user != article.user:
+            if request.user in article.hearts.all():
+                article.hearts.remove(request.user)
+                return Response('좋아요 취소', status=status.HTTP_200_OK)
+            else:
+                article.hearts.add(request.user)
+                return Response('좋아요', status=status.HTTP_200_OK)
         else:
-            article.hearts.add(request.user)
-            return Response('좋아요', status=status.HTTP_200_OK)
+            return Response('본인의 글에는 좋아요 할 수 없습니다.')
 
 
 # ====================== 좋아요 한 게시글 보기 ================================
