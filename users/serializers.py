@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+
 from rest_framework import serializers, exceptions
 from users.models import Users
 from articles.serializers import ArticlesSerializer
