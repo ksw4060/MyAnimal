@@ -1,3 +1,11 @@
+from base64 import urlsafe_b64encode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import smart_bytes, force_str
+from django.contrib.auth import authenticate
+from django.db.models.query_utils import Q
+from django.core.mail import EmailMessage
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -13,6 +21,8 @@ from articles.serializers import ArticlesSerializer
 from users.models import Users
 
 import threading
+
+from django.conf import settings
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -61,7 +71,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         use_url=True,
         required=False,  # 입력값이 없어도 유효성 검사를 통과
         # allow_null=True,
-        default=settings.DEFAULT_PROFILE_IMAGE
+        default='default/die1_1.png'
     )
 
     def get_hearted_articles_count(self, obj):
@@ -118,10 +128,10 @@ class PasswordResetSerializer(serializers.Serializer):
             uidb64 = urlsafe_b64encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
 
-            frontend_site = "127.0.0.1:8000"
-            absurl = f"http://{frontend_site}/set_password.html?/{uidb64}/{token}"
+            frontend_site = "127.0.0.1:5000"
+            absurl = f"http://{frontend_site}/set_password.html?id=${uidb64}&token=${token}"
 
-            email_body = "비밀번호 재설정 " + absurl
+            email_body = "비밀번호 재설정 \n " + absurl
             message = {
                 "email_body": email_body,
                 "to_email": user.email,
@@ -193,3 +203,8 @@ class TokenSerializer(serializers.Serializer):
     password = serializers.CharField(
         write_only=True,
     )
+
+
+#     class Meta:
+#         model = Image
+#         fields = ('id', 'image')
