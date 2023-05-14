@@ -18,7 +18,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 
 from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, UserProfileSerializer
-from .serializers import PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread
+from .serializers import PasswordResetSerializer, SetNewPasswordSerializer, TokenSerializer, EmailThread, PasswordVerificationSerializer
 
 from .models import Users
 
@@ -119,16 +119,27 @@ class ProfileView(APIView):
             return Response({"message": "권한이 없습니다!"}, status=status.HTTP_403_FORBIDDEN)
 # 이미지 업로드, 교체 가능, 삭제는 없음.
 
-    # 회원탈퇴 - 0510 채연 추가
-    def delete(self, request, user_id):
-        user = get_object_or_404(Users, id=user_id)
 
-        if request.user == user:
-            request.user.is_active = False
-            request.user.save()
-            return Response({'message': '회원탈퇴'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+# 회원탈퇴 - 0514 준영 추가 =================================================================
+class WithdrawalView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        serializer = PasswordVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        password = serializer.validated_data['password']
+
+        # 비밀번호 검증 로직을 작성합니다.
+        if user.check_password(password):
+            # request.user.is_active = False  # 사용자 비활성화
+            # request.user.save()
+            user.delete() # 사용자 삭제
+            return Response({'message': '탈퇴가 성공적으로 처리되었습니다.'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': '권한이 없습니다!'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # ========================== 팔로우 =====================================
