@@ -16,12 +16,12 @@ urlpatterns = [
 
     path('<int:article_id>/hearts/', views.HeartsView.as_view(),
          name='Hearts_view'),  # 좋아요 기능
-    path('hearts/', views.HeartsView.as_view(),
+    path('hearts/', views.HeartsListView.as_view(),
          name='User_Hearts_View'),  # 좋아요 한 게시글
 
     path('<int:article_id>/bookmarks/', views.BookMarksView.as_view(),
          name='bookmarks_View'),  # 북마크 기능
-    path('bookmarks/', views.BookMarksView.as_view(),
+    path('bookmarks/', views.BookMarksListView.as_view(),
          name='bookmarks_View'),  # 북마크 한 게시글
 
 
