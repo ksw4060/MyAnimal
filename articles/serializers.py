@@ -34,11 +34,19 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
 
 class ArticlesCreateSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    article_created_at = serializers.DateTimeField(
+        format='%Y-%m-%d', read_only=True)
+    article_updated_at = serializers.DateTimeField(
+        format='%Y-%m-%d', read_only=True)
+
+    def get_user(self, obj):
+        return obj.user.nickname
 
     class Meta:
         model = Articles
-        fields = ("article_title", "article_content",
-                  "article_img", "category")
+        fields = ("pk", "user", "article_title", "article_content",
+                  "article_img", "category", "article_created_at", "article_updated_at")
 
 
 class ArticlesUpdateSerializer(serializers.ModelSerializer):
@@ -57,9 +65,13 @@ class ArticlesUpdateSerializer(serializers.ModelSerializer):
 
 class CommentsSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    comment_created_at = serializers.DateTimeField(
+        format='%Y-%m-%d', read_only=True)
+    comment_updated_at = serializers.DateTimeField(
+        format='%Y-%m-%d', read_only=True)
 
     def get_user(self, obj):
-        return obj.user.email
+        return obj.user.nickname
 
     class Meta:
         model = Comments
