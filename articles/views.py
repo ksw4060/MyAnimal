@@ -136,20 +136,30 @@ class HeartsView(APIView):
             article.hearts.add(request.user)
             return Response('좋아요', status=status.HTTP_200_OK)
 
-# ====================== 좋아요 한 게시글 보기 ================================
 
-    def get(self, request):
-        user = request.user
-        article = user.hearts.all()
-        serializer = ArticlesSerializer(article, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-# ====================== 게시글의 좋아요 ================================
+# ====================== 게시글의 좋아요 갯수 ================================
     def get(self, request, article_id):
         article = Articles.objects.get(id=article_id)
         heart_count = article.count_hearts()
         return Response({'hearts': heart_count})
 
+
+
+class HeartsListView(APIView):
+    # ====================== 좋아요 한 게시글 보기 ================================
+    def post(self, request, article_id):
+        article = get_object_or_404(Articles, id=article_id)
+        if request.user in article.hearts.all():
+            article.hearts.remove(request.user)
+            return Response('좋아요 취소', status=status.HTTP_200_OK)
+        else:
+            article.hearts.add(request.user)
+            return Response('좋아요', status=status.HTTP_200_OK)
+    def get(self, request):
+        user = request.user
+        article = user.hearts.all()
+        serializer = ArticlesSerializer(article, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # ====================== 게시글 북마크 ================================
 
@@ -165,7 +175,24 @@ class BookMarksView(APIView):
             return Response('북마크', status=status.HTTP_200_OK)
 
 
-# ====================== 북마크 한 게시글 보기 ================================
+
+    # ====================== 게시글의 북마크 ================================
+    def get(self, request, article_id):
+        article = Articles.objects.get(id=article_id)
+        bookmark_count = article.count_bookmarks()
+        return Response({'bookmarks': bookmark_count})
+    
+    
+class BookMarksListView(APIView):
+    def post(self, request, article_id):
+        articles = get_object_or_404(Articles, id=article_id)
+        if request.user in articles.bookmarks.all():
+            articles.bookmarks.remove(request.user)
+            return Response('북마크 취소', status=status.HTTP_200_OK)
+        else:
+            articles.bookmarks.add(request.user)
+            return Response('북마크', status=status.HTTP_200_OK)    
+    # ====================== 북마크 한 게시글 보기 ================================
 
     def get(self, request):
         user = request.user
@@ -173,11 +200,7 @@ class BookMarksView(APIView):
         serializer = ArticlesSerializer(article, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # ====================== 게시글의 북마크 ================================
-    def get(self, request, article_id):
-        article = Articles.objects.get(id=article_id)
-        bookmark_count = article.count_bookmarks()
-        return Response({'bookmarks': bookmark_count})
+    
 
 # ====================== 댓글 목록, 작성 클래스 ================================
 
