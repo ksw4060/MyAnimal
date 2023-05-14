@@ -49,25 +49,6 @@ class Articles(models.Model):
         return self.bookmarks.count()
 
 
-'''
-이미지 다중 업로드 받기
-- 게시글과 이미지를 1:N으로 설정해 테이블 생성
-'''
-
-# 이미지 업로드 경로
-# def image_upload_path(instance, filename):
-#     return f'{instance.article.id}/{filename}'
-
-# class ArticleImage(models.Model):
-#     article = models.ForeignKey(Articles, on_delete=models.CASCADE, related_name='image')
-#     image = models.ImageField(upload_to=image_upload_path)
-
-#     def __int__(self):
-#         return self.id
-
-#     class Meta:
-#         db_table = 'article_image'
-
 
 # 댓글 models
 class Comments(models.Model):
