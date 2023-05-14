@@ -12,7 +12,7 @@ urlpatterns = [
     
     path('profile/<int:user_id>/', views.ProfileView.as_view(), name="profile_view"), # /users/profile/<int:user_id>/
     path('follow/<int:user_id>/', views.FollowView.as_view(), name='follow_view'), # /users/follow/<int:user_id>/
-    path("withdraw/<int:user_id>/", views.ProfileView.as_view(), name="token_refresh"), # /users/withdraw/
+    path("withdrawal/", views.WithdrawalView.as_view(), name='withdrawal'), # /users/withdraw/
 
     path("auth/password/reset/", views.PasswordResetView.as_view(), name="password_reset"), # 비밀번호 찾기 (이메일 보내기)
     path("auth/password/reset/b'<str:uidb64>'/<str:token>/", views.PasswordTokenCheckView.as_view(), name="password_reset_confirm"), # 비밀번호 재설정 토큰 확인
