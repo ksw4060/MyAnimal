@@ -12,6 +12,10 @@
   
 백오피스 프로젝트 - Django DRF를 활용하여 프론트엔드와 백엔드가 분리된 프로젝트를 구성해보기
 
+🖼️ Front-End 
+------
+https://github.com/ksw406020230309/Myanimal_front02
+
 
 🤔 기능
 ------
